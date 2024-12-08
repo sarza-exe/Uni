@@ -1,0 +1,44 @@
+# Created at 2024-11-20T20:15:43.633
+java.lang.VerifyError: Expecting a stackmap frame at branch target 45
+Exception Details:
+  Location:
+    eu/jpereira/trainings/designpatterns/structural/decorator/channel/SocialChannelBuilder.instantiateChannel(Ljava/lang/Class;)Leu/jpereira/trainings/designpatterns/structural/decorator/channel/SocialChannel; @17: ldc
+  Reason:
+    Expected stackmap frame at this location.
+  Bytecode:
+    0000000: 033d 11ff ff3e 1213 1100 65b8 0019 013a
+    0000010: 0412 1311 0067 b800 192b b600 6fc0 0055
+    0000020: 3a04 1213 1100 6eb8 0019 a700 3c12 1311
+    0000030: 0068 b800 193a 0512 1311 006a b800 1919
+    0000040: 05b6 0072 1213 1100 6eb8 0019 a700 1a12
+    0000050: 1311 006b b800 193a 0512 1311 006d b800
+    0000060: 1919 05b6 0073 1213 1100 6fb8 0019 1904
+    0000070: b0                                     
+  Exception Handler Table:
+    bci [17, 34] => handler: 45
+    bci [17, 34] => handler: 79
+  Stackmap Table:
+    full_frame(@53,{Object[#2],Object[#87],Object[#85]},{Object[#105]})
+    same_locals_1_stack_item_frame(@87,Object[#107])
+    same_frame(@110)
+
+	at java.base/java.lang.Class.getDeclaredMethods0(Native Method)
+	at java.base/java.lang.Class.privateGetDeclaredMethods(Class.java:3601)
+	at java.base/java.lang.Class.getMethodsRecursive(Class.java:3743)
+	at java.base/java.lang.Class.getMethod0(Class.java:3728)
+	at java.base/java.lang.Class.getMethod(Class.java:2403)
+	at org.apache.maven.surefire.api.util.ReflectionUtils.tryGetMethod(ReflectionUtils.java:50)
+	at org.apache.maven.surefire.common.junit3.JUnit3TestChecker.isSuiteOnly(JUnit3TestChecker.java:60)
+	at org.apache.maven.surefire.common.junit3.JUnit3TestChecker.isValidJUnit3Test(JUnit3TestChecker.java:56)
+	at org.apache.maven.surefire.common.junit3.JUnit3TestChecker.accept(JUnit3TestChecker.java:52)
+	at org.apache.maven.surefire.common.junit4.JUnit4TestChecker.accept(JUnit4TestChecker.java:48)
+	at org.apache.maven.surefire.api.util.DefaultScanResult.applyFilter(DefaultScanResult.java:87)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.scanClassPath(JUnit4Provider.java:272)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.setTestsToRun(JUnit4Provider.java:174)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:132)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+

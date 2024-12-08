@@ -1,0 +1,5 @@
+Adapter: DP that lets you implement an interface that doesn't match the original class
+
+use of Adapter DP: ThirdPartyDoorAdapter is the new class that extends ThirdPartyDoor implements Door
+
+ThirdPartyDoorObjectAdapter: regular use of Door interface

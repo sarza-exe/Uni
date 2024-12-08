@@ -1,0 +1,9 @@
+Singleton is a creational design pattern that lets you ensure that a class has
+only one instance, while providing a global access point to this instance.
+
+ReportBuilder:
+    1. Changed constructor to private to prevent instantiation
+    2. Variable ReportBuilder instance is now volatile
+        to ensure visibility across threads
+    3. Implements synchronized block for thread-safe initialization
+    4. Double-checked locking in getInstance()

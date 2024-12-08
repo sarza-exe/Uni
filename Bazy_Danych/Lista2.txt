@@ -1,0 +1,399 @@
+ZAD_1.
+create database aparaty;
+create user '279686'@localhost identified by 'zyndul86';
+grant select, insert, update on aparaty.* to '279686'@localhost identified by 'zyndul86';
+flush privileges;
+
+ZAD_2.
+CREATE TABLE Matryca
+(
+ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+przekatna DECIMAL(4,2) UNSIGNED NOT NULL, 
+rozdzielczosc DECIMAL(3,1) UNSIGNED NOT NULL, 
+typ VARCHAR(10) NOT NULL
+) AUTO_INCREMENT=100;
+
+CREATE TABLE Obiektyw
+(
+ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+model VARCHAR(30) NOT NULL, 
+minPrzeslona FLOAT UNSIGNED NOT NULL,
+maxPrzeslona FLOAT UNSIGNED NOT NULL,
+CHECK (minPrzeslona < maxPrzeslona)
+);
+
+CREATE TABLE Producent
+(
+ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+nazwa VARCHAR(50) NOT NULL, 
+kraj VARCHAR(20) NOT NULL DEFAULT 'nieznany',
+adresKorespondencyjny VARCHAR(100) NOT NULL DEFAULT 'nieznany'
+);
+
+ALTER TABLE Producent 
+ADD CONSTRAINT chk_nazwa_not_empty CHECK (nazwa <> '');
+
+CREATE TABLE Aparat
+(
+	model VARCHAR(30) NOT NULL PRIMARY KEY,
+	producent INT UNSIGNED NOT NULL,
+	matryca INT UNSIGNED NOT NULL,
+	obiektyw INT UNSIGNED NOT NULL,
+	waga FLOAT UNSIGNED NOT NULL,
+	typ ENUM('kompaktowy', 'lustrzanka', 'profesjonalny', 'inny') NOT NULL,
+	CONSTRAINT fk_producent FOREIGN KEY(producent) REFERENCES Producent(ID),
+	CONSTRAINT fk_matryca FOREIGN KEY(matryca) REFERENCES Matryca(ID),
+	CONSTRAINT fk_obiektyw FOREIGN KEY(obiektyw) REFERENCES Obiektyw(ID)
+);
+
+ZAD_3.
+SYSTEM mariadb -u 279686 -p
+use aparaty;
+
+INSERT INTO Matryca (przekatna, rozdzielczosc, typ) VALUES
+(3.5, 12.3, 'CMOS'),
+(4.0, 16.2, 'CCD'),
+(4.5, 20.1, 'CMOS'),
+(5.0, 24.0, 'CCD'),
+(3.7, 14.8, 'CMOS'),
+(6.0, 30.2, 'CMOS'),
+(3.8, 12.5, 'CCD'),
+(5.5, 22.0, 'CMOS'),
+(4.2, 18.0, 'CCD'),
+(4.8, 15.7, 'CMOS'),
+(5.3, 20.5, 'CMOS'),
+(3.9, 13.0, 'CCD'),
+(6.1, 25.5, 'CMOS'),
+(4.3, 17.3, 'CCD'),
+(5.1, 19.8, 'CMOS');
+
+INSERT INTO Obiektyw (model, minPrzeslona, maxPrzeslona) VALUES
+('Canon EF 50mm', 1.8, 22.0),
+('Nikon AF-S 24-70mm', 2.8, 22.0),
+('Sony FE 85mm', 1.4, 16.0),
+('Sigma 35mm', 1.4, 16.0),
+('Tamron SP 70-200mm', 2.8, 32.0),
+('Olympus M.Zuiko 12-40mm', 2.8, 22.0),
+('Panasonic Lumix G 20mm', 1.7, 16.0),
+('Canon RF 24-105mm', 4.0, 22.0),
+('Fujifilm XF 16-55mm', 2.8, 22.0),
+('Nikon Z 14-30mm', 4.0, 22.0),
+('Sony 16-35mm', 2.8, 22.0),
+('Sigma 105mm', 1.4, 16.0),
+('Tamron 28-75mm', 2.8, 22.0),
+('Canon EF 24-70mm', 2.8, 22.0),
+('Panasonic 25mm', 1.7, 16.0);
+
+INSERT INTO Producent (nazwa, kraj, adresKorespondencyjny) VALUES
+('Canon', 'Japonia', '30-2, Shimomaruko 3-chome, Ohta-ku, Tokyo'),
+('Nikon', 'Japonia', 'Shinagawa Intercity Tower C, Tokyo'),
+('Sony', 'Japonia', '1-7-1 Konan, Minato-ku, Tokyo'),
+('Olympus', 'Japonia', '2951 Ishikawa-cho, Hachioji-shi, Tokyo'),
+('Fujifilm', 'Japonia', '7-3, Akasaka 9-chome, Minato-ku, Tokyo'),
+('DJI', 'Chiny', '14th floor, West Wing, Skyworth Semiconductor Design Building, Shenzhen'),
+('Huawei', 'Chiny', 'Huawei Base, Bantian, Longgang District, Shenzhen'),
+('Xiaomi', 'Chiny', '68 Qinghe Middle St, Haidian District, Beijing'),
+('ZTE', 'Chiny', 'ZTE Plaza, Keji South Road, Shenzhen'),
+('Yongnuo', 'Chiny', 'Nanshan District, Shenzhen'),
+('Panasonic', 'Japonia', '1-1, Kadoma, Osaka'),
+('Ricoh', 'Japonia', '1-3-6, Nagaki, Takamatsu City, Kagawa'),
+('GoPro', 'USA', '3000 Clearview Way, San Mateo, CA'),
+('Sigma', 'Japonia', '1-7-1, Omiya-cho, Kawaguchi City, Saitama'),
+('Tamron', 'Japonia', '9-1, Tokiwa-cho, Saitama');
+
+INSERT INTO Aparat (model, producent, matryca, obiektyw, waga, typ) VALUES
+('Canon EOS 90D', 1, 100, 1, 1.1, 'lustrzanka'),
+('Nikon D7500', 2, 101, 2, 1.0, 'lustrzanka'),
+('Sony Alpha A7 III', 3, 102, 3, 1.5, 'profesjonalny'),
+('Fujifilm X-T4', 5, 103, 4, 0.6, 'kompaktowy'),
+('Olympus OM-D E-M1 Mark III', 4, 104, 5, 0.5, 'profesjonalny'),
+('Panasonic Lumix GH5', 6, 105, 6, 0.7, 'profesjonalny'),
+('Canon PowerShot G7 X', 1, 106, 7, 0.3, 'kompaktowy'),
+('Nikon Z50', 2, 107, 8, 0.4, 'kompaktowy'),
+('Sony RX100 VII', 3, 108, 9, 0.3, 'kompaktowy'),
+('DJI Osmo Pocket', 7, 109, 10, 0.2, 'inny'),
+('GoPro HERO9 Black', 12, 110, 11, 0.3, 'inny'),
+('Sigma fp', 10, 111, 12, 0.7, 'profesjonalny'),
+('Tamron 28-75mm', 13, 112, 13, 0.5, 'profesjonalny'),
+('Xiaomi Yi 4K', 8, 113, 14, 0.3, 'kompaktowy'),
+('Ricoh GR III', 9, 114, 15, 0.2, 'kompaktowy');
+
+INSERT INTO Matryca (przekatna, rozdzielczosc, typ) VALUES
+(-3.5, 12.3, 'CMOS'),
+(4.0, -16.2, 'CCD');
+
+INSERT INTO Obiektyw (model, minPrzeslona, maxPrzeslona) VALUES
+('Canon EF 50mm', 2.8, 1.8),
+('Nikon AF-S 24-70mm', -4.0, 2.8);
+
+INSERT INTO Producent (nazwa, kraj, adresKorespondencyjny) VALUES
+('', 'Japonia', 'Tokyo'); 
+
+INSERT INTO Aparat (model, producent, matryca, obiektyw, waga, typ) VALUES
+('Canon EOS 90D', 999, 100, 1, -1.1, 'lustrzanka'),
+('Nikon D7500', 1, 200, 2, 1.0, 'lustrzanka');
+
+ZAD_4.
+
+DELIMITER //
+
+CREATE PROCEDURE insert_to_aparat()
+BEGIN
+	DECLARE model_name VARCHAR(10);
+	DECLARE prod_id INT;
+	DECLARE matryca_id INT;
+	DECLARE obiektyw_id INT;
+	DECLARE waga_val FLOAT;
+	DECLARE typ_val VARCHAR(15);
+	DECLARE n INT;
+	DECLARE is_there_model INT;
+	DECLARE i INT;
+	SET i = 1;
+
+	SELECT COUNT(*) INTO is_there_model FROM aparat WHERE model LIKE 'model_%';
+
+	IF is_there_model= 0 THEN
+		SET n = 1;
+	ELSE
+		SET n = (SELECT CAST(SUBSTRING(model, 7) AS UNSIGNED)
+			FROM Aparat
+			WHERE model LIKE 'model_%'
+			ORDER BY CAST(SUBSTRING(model, 7) AS UNSIGNED) DESC
+			LIMIT 1) + 1;
+	END IF;
+
+
+	WHILE i<=100 DO
+		
+		SET model_name = (CONCAT('model_', CAST(n AS CHAR)));
+		SET n = n+1;
+		
+		SELECT ID INTO prod_id FROM Producent 
+		ORDER BY RAND() LIMIT 1;
+	
+		SELECT ID INTO matryca_id FROM Matryca 
+		ORDER BY RAND() LIMIT 1;
+	
+		SELECT ID INTO obiektyw_id FROM Obiektyw 
+		ORDER BY RAND() LIMIT 1;
+
+		SET waga_val = 0.3+RAND();
+	
+		SET typ_val = ELT(FLOOR(1+RAND()*4), 'kompaktowy', 'lustrzanka', 'profesjonalny', 'inny');
+		
+		INSERT INTO Aparat (model, producent, matryca, obiektyw, waga, typ) VALUES
+		(model_name, prod_id, matryca_id, obiektyw_id, waga_val, typ_val);
+		
+		SET i = i + 1;
+	END WHILE;
+END //
+
+DELIMITER ;	
+
+
+Czy procedura może być utworzona i wykonana przez użytkownika z zadania 1? NIE
+
+Żeby użytkownik mógł robić procedury
+GRANT CREATE ROUTINE ON database_name.* TO 279686@'localhost';
+Żeby użytkownik mógł wykonywać procedure
+GRANT EXECUTE ON PROCEDURE insert_to_actor TO 279686@'localhost';
+
+
+ZAD_5.
+
+
+DELIMITER //
+
+CREATE FUNCTION min_matryca ( id_producenta INT )
+RETURNS VARCHAR(30) 
+BEGIN
+	DECLARE model_nazwa VARCHAR(30);
+	SET model_nazwa = '';
+
+	SELECT a.model INTO model_nazwa 
+	FROM aparat a 
+	JOIN matryca m ON a.matryca = m.ID
+	WHERE a.producent = id_producenta
+	ORDER BY m.przekatna
+	LIMIT 1;
+
+	RETURN model_nazwa;
+END; //
+
+DELIMITER ;
+
+SELECT min_matryca(1);
+
+
+ZAD_6.
+
+
+DELIMITER //
+
+CREATE TRIGGER check_producent
+	BEFORE INSERT ON Aparat
+	FOR EACH ROW
+BEGIN
+	DECLARE prod_exists INT;
+
+	SELECT COUNT(*) INTO prod_exists 
+	FROM Producent
+	WHERE ID = NEW.producent;
+
+	IF prod_exists = 0 THEN
+		INSERT INTO Producent (ID, nazwa) 
+		VALUES (NEW.producent, CONCAT('producent_', CAST(NEW.producent AS CHAR)));
+	END IF;
+END; //	
+
+DELIMITER ;
+
+
+
+INSERT INTO Aparat (model, producent, matryca, obiektyw, waga, typ) VALUES
+('Canon Non Existo', 21, 100, 1, 1.5, 'inny');
+
+
+ZAD_7.
+
+DELIMITER //
+
+CREATE FUNCTION aparaty_z_matryca ( id_matryca INT )
+RETURNS INT
+BEGIN
+	DECLARE liczba_modeli INT;
+
+	SELECT COUNT(*) INTO liczba_modeli
+	FROM aparat
+	WHERE matryca = id_matryca;
+
+	RETURN liczba_modeli;
+END; //
+
+DELIMITER ;
+
+
+SELECT aparaty_z_matryca(104);
+
+
+ZAD_8.
+
+DELIMITER //
+
+CREATE TRIGGER usun_matryca_delete
+	AFTER DELETE ON Aparat
+	FOR EACH ROW
+BEGIN
+	DECLARE liczba_aparatow INT;
+	
+	SELECT COUNT(*) INTO liczba_aparatow
+	FROM Aparat
+	WHERE matryca = OLD.matryca;
+
+	IF liczba_aparatow = 0 THEN
+		DELETE FROM Matryca WHERE ID=OLD.matryca;
+	END IF;
+END; //
+
+DELIMITER ;
+
+
+INSERT INTO Matryca (przekatna, rozdzielczosc, typ) VALUES
+(4, 11.4, 'CMOS');
+INSERT INTO Aparat (model, producent, matryca, obiektyw, waga, typ) VALUES
+('Canon BOMBO', 21, 115, 1, 1.5, 'inny');
+DELETE FROM aparat WHERE matryca = 115;
+
+
+ZAD_9.
+
+CREATE VIEW aparat_details AS
+SELECT a.model, a.waga, p.nazwa, m.przekatna, m.rozdzielczosc, o.minPrzeslona, o.maxPrzeslona 
+FROM aparat a 
+JOIN producent p ON a.producent = p.ID 
+JOIN matryca m ON a.matryca = m.ID 
+JOIN obiektyw o ON a.obiektyw = o.ID 
+WHERE a.typ = 'lustrzanka' AND p.kraj <> 'Chiny';
+
+SELECT * FROM aparat_details;
+
+
+Użytkownik z zadania 1 nie może zrobić tego widoku.
+GRANT CREATE VIEW ON aparaty.* TO '279686'@localhost;
+
+
+ZAD_10.
+
+CREATE VIEW aparat_producent AS
+SELECT p.nazwa, p.kraj, a.model 
+FROM aparat a 
+LEFT JOIN producent p ON a.producent = p.ID;
+
+DELETE FROM Aparat WHERE producent IN (SELECT ID FROM producent WHERE kraj = 'Chiny');
+
+Przed wykonaniem DELETE widok ma 116 rekordów. Po wykonaniu ma 79 rekordów.
+
+
+ZAD_11.
+ALTER TABLE Producent ADD liczbaModeli INT NOT NULL DEFAULT 0;
+
+UPDATE Producent p 
+SET p.liczbaModeli = (
+SELECT COUNT(*)	
+FROM Aparat a
+WHERE a.producent = p.ID
+);
+
+
+DELIMITER //
+
+CREATE TRIGGER update_producent_after_insert
+AFTER INSERT ON Aparat
+FOR EACH ROW
+BEGIN
+    UPDATE Producent
+    SET liczbaModeli = liczbaModeli + 1
+    WHERE ID = NEW.producent;
+END; //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER update_producent_after_delete
+AFTER DELETE ON Aparat
+FOR EACH ROW
+BEGIN
+    UPDATE Producent
+    SET liczbaModeli = liczbaModeli - 1
+    WHERE ID = OLD.producent;
+END; //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER update_producent_after_update
+AFTER UPDATE ON Aparat
+FOR EACH ROW
+BEGIN
+    IF OLD.producent != NEW.producent THEN
+        UPDATE Producent
+        SET liczbaModeli = liczbaModeli - 1
+        WHERE ID = OLD.producent;
+
+        UPDATE Producent
+        SET liczbaModeli = liczbaModeli + 1
+        WHERE ID = NEW.producent;
+    END IF;
+END; //
+
+DELIMITER ;
+
+
+Czy użytkownik z zadania 1 może stworzyć trigger? NIE
+GRANT CREATE TRIGGER ON aparaty.* TO '279686'@localhost;
+
+Trigger stworzony przez roota będzie działał dla operacji użytkownika z zadania 1.

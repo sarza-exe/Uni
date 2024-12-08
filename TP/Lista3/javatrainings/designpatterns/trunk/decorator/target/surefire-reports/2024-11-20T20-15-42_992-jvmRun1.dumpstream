@@ -1,0 +1,25 @@
+# Created at 2024-11-20T20:15:43.645
+Expecting a stackmap frame at branch target 45
+Exception Details:
+  Location:
+    eu/jpereira/trainings/designpatterns/structural/decorator/channel/SocialChannelBuilder.instantiateChannel(Ljava/lang/Class;)Leu/jpereira/trainings/designpatterns/structural/decorator/channel/SocialChannel; @17: ldc
+  Reason:
+    Expected stackmap frame at this location.
+  Bytecode:
+    0000000: 033d 11ff ff3e 1213 1100 65b8 0019 013a
+    0000010: 0412 1311 0067 b800 192b b600 6fc0 0055
+    0000020: 3a04 1213 1100 6eb8 0019 a700 3c12 1311
+    0000030: 0068 b800 193a 0512 1311 006a b800 1919
+    0000040: 05b6 0072 1213 1100 6eb8 0019 a700 1a12
+    0000050: 1311 006b b800 193a 0512 1311 006d b800
+    0000060: 1919 05b6 0073 1213 1100 6fb8 0019 1904
+    0000070: b0                                     
+  Exception Handler Table:
+    bci [17, 34] => handler: 45
+    bci [17, 34] => handler: 79
+  Stackmap Table:
+    full_frame(@53,{Object[#2],Object[#87],Object[#85]},{Object[#105]})
+    same_locals_1_stack_item_frame(@87,Object[#107])
+    same_frame(@110)
+
+

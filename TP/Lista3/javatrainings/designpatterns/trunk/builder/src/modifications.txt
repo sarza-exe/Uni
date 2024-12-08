@@ -1,0 +1,19 @@
+MODIFICATIONS
+
+Builder is a creational design pattern that lets you construct complex objects step by step.
+The pattern allows you to produce different types and representations of
+an object using the same construction code.
+
+ReportBody Interface has become a builder.
+
+1. ADDED
+        void putContent(Object content);
+        void addCustomerInfo(SaleEntry saleEntry);
+        void addItems(SaleEntry saleEntry);
+   to ReportBody Interface.
+2. ADDED implementations of methods to HTML, XML and JSON Report Bodies.
+3. ADDED ReportBodyFactory for creating different report bodies without changing ReportAssembler code.
+4. REMOVED excess code from ReportAssembler.
+5. Dependency Inversion principle
+    ReportAssembler doesn't communicate directly with HTML, XML or JSON Report Bodies.
+    Instead ReportBodyFactory creates specific implementations of Report Body interface.

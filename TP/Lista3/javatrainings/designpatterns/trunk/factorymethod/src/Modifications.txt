@@ -1,0 +1,8 @@
+MODIFICATIONS
+
+ReportGenerator:
+    Removed ifs from generateReport method
+    Now upon creating new class implementing Report interface
+    we don't have to change ReportGenerator class
+
+Created class ReportFactory which creates different reports based on type

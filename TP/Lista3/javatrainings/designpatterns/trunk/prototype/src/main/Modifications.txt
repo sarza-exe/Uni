@@ -1,0 +1,2 @@
+Added testCloneVehicle() to SimpleVehicleBuilderTest
+Implemented clone() method in vehicle

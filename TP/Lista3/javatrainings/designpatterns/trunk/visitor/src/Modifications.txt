@@ -1,0 +1,15 @@
+Completed HumidityAlarmFilter class
+
+The classes implement the Visitor Design Pattern by allowing EventFilter to "visit" each
+Alarm object and apply its logic.
+
+The Core of Visitor DP is to create method that's implemented differently through objects
+and the invoking those different methods from one place, because we don't need to know the
+type of the object because they override the visitor's method.
+
+AlarmMemoryStore's filter method invokes runFilter method through all Alarm instances
+public void filter(EventFilter filter) {
+    for (Alarm alarm : this.alarms) {
+        alarm.runFilter(filter);
+    }
+}
